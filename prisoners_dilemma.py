@@ -572,17 +572,42 @@ def get_action(player, history, opponent_history, score, opponent_score, getting
 
 
 
-    #Team17: Enter Team Name Here
-    #Team Members:
-    #######################################
+    #Team17: Not Tit For Tat
+    #Team Members: Jerry and Truman
 
 
     elif player == 17:
+        c_count=0
+        b_count=0
         if getting_team_name:
-            return 'Enter Team Name Here'
+            return 'Not Tit For Tat'
         else:
-            if len(opponent_history)==0: #It's the first round: collude
-                return 'c'
+            if len(opponent_history)==0: #It's the first round: betray
+                return 'b'
+            elif 'c' not in opponent_history:
+                return 'b'
+            elif 'b' not in opponent_history:
+                return 'b'
+            elif len(opponent_history)>=10:
+                for letter in range(len(opponent_history)):
+                    if opponent_history[letter]=="c":
+                        c_count+=1
+                    if opponent_history[letter]=="b":
+                        b_count+=1
+                if (b_count/(len(opponent_history)))>=0.99:
+                    return 'b'
+                elif (c_count/(len(opponent_history)))>=0.91:
+                    return 'b'
+                elif (c_count/(len(opponent_history)))>=0.9:
+                    return 'c'
+                elif (b_count/(len(opponent_history)))>=0.8:
+                    return 'b'
+                elif (c_count/(len(opponent_history)))>=0.75:
+                    return 'c'
+                elif (b_count/(len(opponent_history)))<=0.1:
+                    return 'b'
+                else:
+                    return 'b'
             elif history[-1]=='c' and opponent_history[-1]=='b':
                 return 'b' # betray if they were severely punished last time
             else:
